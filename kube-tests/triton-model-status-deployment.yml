@@ -2,21 +2,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: model-status-logger
+  name: triton-model-status
   namespace: vp-reception-dev
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: model-status-logger
+      app: triton-model-status
   template:
     metadata:
       labels:
-        app: model-status-logger
+        app: triton-model-status
     spec:
       containers:
-      - name: model-status-logger
-        image: nexus-dcr.avlab.dev/rmsaitov/model_state_logger:1.0.2
+      - name: triton-model-status
+        image: nexus-dcr.avlab.dev/triton_model_status/main:2.0.0
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8090
@@ -24,31 +24,31 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: model-status-logger-service
+  name: triton-model-status-service
   namespace: vp-reception-dev
   labels:
-    app: model-status-logger
+    app: triton-model-status
 spec:
   clusterIP: None
   ports:
-    - name: model-status-logger-metrics
+    - name: triton-model-status-metrics
       protocol: TCP
       port: 8090
       targetPort: 8090
   selector:
-    app: model-status-logger
+    app: triton-model-status
   type: ClusterIP
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: model-status-logger
+  name: triton-model-status
   namespace: vp-reception-dev
   labels:
     release: prometheus-stack
 spec:
   selector:
     matchLabels:
-      app: model-status-logger
+      app: triton-model-status
   endpoints:
-  - port: model-status-logger-metrics
+  - port: triton-model-status-metrics

@@ -44,6 +44,7 @@ func NewMetrics(reg prometheus.Registerer) *metrics {
 
 
 func server() {
+    //TODO: переделать под енв пода
 	url := "http://video-triton.vp-reception-dev.svc.cluster.local:8000/v2/repository/index"
     method := "POST"
 
